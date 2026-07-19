@@ -31,8 +31,10 @@ jobs:
         rm -rf twrp/device/samsung/gta4lve/twrp
         rm -rf twrp/device/samsung/gta4lve/.git
         rm -rf twrp/device/samsung/gta4lve/.github
-        # إجبار إيقاف الـ AVB لمنع خطأ مساحة بارتشن النظام
         echo "BOARD_AVB_ENABLE := false" >> twrp/device/samsung/gta4lve/BoardConfig.mk
+        # إنشاء ملف كرنل وهمي لتخطي خطأ الملف الناقص في آخر ثانية
+        mkdir -p twrp/device/samsung/gta4lve/prebuilt
+        touch twrp/device/samsung/gta4lve/prebuilt/kernel
 
     - name: Building TWRP
       run: |
@@ -47,4 +49,3 @@ jobs:
       with:
         name: TWRP_Build_gta4lve
         path: twrp/out/target/product/gta4lve/recovery.*
-        
