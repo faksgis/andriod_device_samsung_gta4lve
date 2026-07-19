@@ -5,12 +5,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/sushrut1101/docker-cyanogenmod:latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Cleanup Server Space
+      run: |
+        sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php
+        sudo apt-get clean
+
+    - name: Install Build Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf liblz4-tool libncurses5 libssl-dev libxml2 libxml2-utils lzop rsync schedtool squashfs-tools xsltproc zip zlib1g-dev
+
+    - name: Install Repo Tool
+      run: |
+        mkdir ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        sudo ln -sf ~/bin/repo /usr/bin/repo
 
     - name: Sync TWRP Source
       run: |
@@ -29,14 +44,13 @@ jobs:
     - name: Building TWRP
       run: |
         cd twrp
-        export HOME=/root
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch omni_gta4lve-eng
         make recoveryimage -j$(nproc)
 
     - name: Upload TWRP Artifacts
-      uses: actions/checkout@v4
+      uses: actions/upload-artifact@v4
       with:
-        repository: actions/upload-artifact
-        ref: v4
+        name: TWRP_Build_gta4lve
+        path: twrp/out/target/product/gta4lve/recovery.*
