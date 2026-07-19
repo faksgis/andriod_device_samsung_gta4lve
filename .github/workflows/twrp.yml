@@ -10,10 +10,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install Repo Tool Properly
+    - name: Install Missing Host Libraries
       run: |
         sudo apt-get update || true
-        sudo apt-get install -y repo git
+        sudo apt-get install -y repo git libtinfo5 libncurses5 || true
+        # حل مشكلة المكتبة الناقصة عبر ربطها بالمكتبة الحديثة كبديل مضمون
+        sudo ln -sf /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5 || true
+        sudo ln -sf /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5 || true
 
     - name: Sync TWRP Source
       run: |
@@ -32,7 +35,6 @@ jobs:
         rm -rf twrp/device/samsung/gta4lve/.git
         rm -rf twrp/device/samsung/gta4lve/.github
         echo "BOARD_AVB_ENABLE := false" >> twrp/device/samsung/gta4lve/BoardConfig.mk
-        # إنشاء ملف كرنل وهمي لتخطي خطأ الملف الناقص في آخر ثانية
         mkdir -p twrp/device/samsung/gta4lve/prebuilt
         touch twrp/device/samsung/gta4lve/prebuilt/kernel
 
