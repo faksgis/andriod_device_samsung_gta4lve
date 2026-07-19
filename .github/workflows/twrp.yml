@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Cleanup Server Space
       run: |
@@ -50,7 +50,7 @@ jobs:
         make recoveryimage -j$(nproc)
 
     - name: Upload TWRP Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: TWRP_Build_gta4lve
         path: twrp/out/target/product/gta4lve/recovery.*
