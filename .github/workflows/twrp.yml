@@ -10,12 +10,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install Repo Tool
+    - name: Install Repo Tool Properly
       run: |
-        mkdir ~/bin
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-        chmod a+x ~/bin/repo
-        sudo ln -sf ~/bin/repo /usr/bin/repo
+        sudo apt-get update || true
+        sudo apt-get install -y repo git
 
     - name: Sync TWRP Source
       run: |
