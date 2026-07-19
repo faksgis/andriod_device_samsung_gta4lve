@@ -28,10 +28,11 @@ jobs:
       run: |
         mkdir -p twrp/device/samsung/gta4lve
         cp -r * twrp/device/samsung/gta4lve/ || true
-        # حذف المجلدات المكررة التي تسبب تعارض في البناء
         rm -rf twrp/device/samsung/gta4lve/twrp
         rm -rf twrp/device/samsung/gta4lve/.git
         rm -rf twrp/device/samsung/gta4lve/.github
+        # إجبار إيقاف الـ AVB لمنع خطأ مساحة بارتشن النظام
+        echo "BOARD_AVB_ENABLE := false" >> twrp/device/samsung/gta4lve/BoardConfig.mk
 
     - name: Building TWRP
       run: |
@@ -46,3 +47,4 @@ jobs:
       with:
         name: TWRP_Build_gta4lve
         path: twrp/out/target/product/gta4lve/recovery.*
+        
